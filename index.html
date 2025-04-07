@@ -90,42 +90,29 @@
     </article>
   </section>
 
-  <script>
-    function updateTable() {
-      fetch("http://192.168.19.139/data")
-        .then(response => response.json())
-        .then(data => {
-          // Power availability
-          document.getElementById('EEE').innerHTML = data.power[0] ? "Yes ✅" : "No ❌";
-          document.getElementById('class').innerHTML = data.power[1] ? "Yes ✅" : "No ❌";
-          document.getElementById('computer').innerHTML = data.power[2] ? "Yes ✅" : "No ❌";
-          document.getElementById('machines').innerHTML = data.power[3] ? "Yes ✅" : "No ❌";
+ <script>
+async function fetchESP32Data() {
+  try {
+    const response = await fetch("http://192.168.178.139/status");  // Change to your ESP32 IP
+    const data = await response.json();
 
-          // Notification status
-          document.getElementById('call1').innerHTML = data.calling[0];
-          document.getElementById('call2').innerHTML = data.calling[1];
-          document.getElementById('call3').innerHTML = data.calling[2];
-          document.getElementById('call4').innerHTML = data.calling[3];
-
-          // Energy values
-          document.getElementById('energy1').innerHTML = data.energy[0];
-          document.getElementById('energy2').innerHTML = data.energy[1];
-          document.getElementById('energy3').innerHTML = data.energy[2];
-          document.getElementById('energy4').innerHTML = data.energy[3];
-
-          // Optional: Add job status if available in your data
-          if (data.jobStatus) {
-            document.getElementById('job1').innerHTML = data.jobStatus[0];
-            document.getElementById('job2').innerHTML = data.jobStatus[1];
-            document.getElementById('job3').innerHTML = data.jobStatus[2];
-            document.getElementById('job4').innerHTML = data.jobStatus[3];
-          }
-        })
-        .catch(err => console.error("Error fetching data:", err));
+    for (let i = 0; i < 4; i++) {
+      const line = data[line${i}];
+      document.getElementById(location${i}).innerText = line.location;
+      document.getElementById(voltage${i}).innerText = line.voltage + " V";
+      document.getElementById(current${i}).innerText = line.current + " A";
+      document.getElementById(energy${i}).innerText = line.energy + " kWh";
+      document.getElementById(supply${i}).innerText = line.supply;
+      document.getElementById(job${i}).innerText = line.job;
     }
+  } catch (error) {
+    console.error("Failed to fetch ESP32 data:", error);
+  }
+}
 
-    setInterval(updateTable, 2000);
-    updateTable();
-  </script>
+// Auto update every 5 seconds
+setInterval(fetchESP32Data, 5000);
+fetchESP32Data();
+</script>
 </body>
 </html>
