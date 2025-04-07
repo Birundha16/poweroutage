@@ -90,21 +90,33 @@
     </article>
   </section>
 
- <script>
+<script>
 async function fetchESP32Data() {
   try {
-    const response = await fetch("https://192.168.178.139/data");  // Change to your ESP32 IP
+    const response = await fetch("http://192.168.178.139/status");
     const data = await response.json();
 
-    for (let i = 0; i < 4; i++) {
-      const line = data[line${i}];
-      document.getElementById(location${i}).innerText = line.location;
-      document.getElementById(voltage${i}).innerText = line.voltage + " V";
-      document.getElementById(current${i}).innerText = line.current + " A";
-      document.getElementById(energy${i}).innerText = line.energy + " kWh";
-      document.getElementById(supply${i}).innerText = line.supply;
-      document.getElementById(job${i}).innerText = line.job;
-    }
+    // Update each row using the ID from your HTML
+    document.getElementById("EEE").innerText = data.EEE.supply;
+    document.getElementById("call1").innerText = data.EEE.notification;
+    document.getElementById("job1").innerText = data.EEE.job;
+    document.getElementById("energy1").innerText = data.EEE.energy + " kWh";
+
+    document.getElementById("class").innerText = data.class.supply;
+    document.getElementById("call2").innerText = data.class.notification;
+    document.getElementById("job2").innerText = data.class.job;
+    document.getElementById("energy2").innerText = data.class.energy + " kWh";
+
+    document.getElementById("computer").innerText = data.computer.supply;
+    document.getElementById("call3").innerText = data.computer.notification;
+    document.getElementById("job3").innerText = data.computer.job;
+    document.getElementById("energy3").innerText = data.computer.energy + " kWh";
+
+    document.getElementById("machines").innerText = data.machines.supply;
+    document.getElementById("call4").innerText = data.machines.notification;
+    document.getElementById("job4").innerText = data.machines.job;
+    document.getElementById("energy4").innerText = data.machines.energy + " kWh";
+
   } catch (error) {
     console.error("Failed to fetch ESP32 data:", error);
   }
