@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: rgba(225, 225, 230, 0.897);
+    }
+
+    table, th, td {
+      border: 1px solid black;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: rgb(168, 162, 162); 
+      padding: 15px;
+    }
+
+    td {
+      padding: 30px;
+    }
+
+    h3, h2 {
+      text-align: center;
+    }
+
+    header {
+      background-color: #666;
+      padding: 30px;
+      text-align: center;
+      font-size: 35px;
+      color: white;
+    }
+
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    nav {
+      float: left;
+      width: 10%;
+      height: 500px;
+      background: #ccc;
+      padding: 20px;
+    }
+
+    section::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h3>REAL TIME POWER SUPPLY TRACKING</h3>
+  </header>
+
+  <section>
+    <h2>Dashboard</h2>
+    <article>
+      <table style="width:100%">
+        <tr>
+          <th>S.No</th>
+          <th>BUILDING</th>
+          <th>FLOOR NUMBER</th>
+          <th>POWER SUPPLY AVAILABLITY</th>
+          <th>INCHARGE NAME</th>
+          <th>NOTIFICATION STATUS</th>
+          <th>JOB STATUS</th>
+          <th>ENERGY (kWh)</th>
+        </tr>
+        <tr>
+          <td>1.</td><td>BUILDING 1</td><td>01</td><td id="EEE"></td><td>Person 1</td><td id="call1"></td><td id="job1"></td><td id="energy1"></td>
+        </tr>
+        <tr>
+          <td>2.</td><td>BUILDING 1</td><td>02</td><td id="class"></td><td>Person 1</td><td id="call2"></td><td id="job2"></td><td id="energy2"></td>
+        </tr>
+        <tr>
+          <td>3.</td><td>BUILDING 2</td><td>Ground floor</td><td id="computer"></td><td>Person 2</td><td id="call3"></td><td id="job3"></td><td id="energy3"></td>
+        </tr>
+        <tr>
+          <td>4.</td><td>BUILDING 3</td><td>-</td><td id="machines"></td><td>Person 3</td><td id="call4"></td><td id="job4"></td><td id="energy4"></td>
+        </tr>
+      </table>
+    </article>
+  </section>
+
+  <script>
+    function updateTable() {
+      fetch("http://192.168.19.139/data")
+        .then(response => response.json())
+        .then(data => {
+          // Power availability
+          document.getElementById('EEE').innerHTML = data.power[0] ? "Yes ✅" : "No ❌";
+          document.getElementById('class').innerHTML = data.power[1] ? "Yes ✅" : "No ❌";
+          document.getElementById('computer').innerHTML = data.power[2] ? "Yes ✅" : "No ❌";
+          document.getElementById('machines').innerHTML = data.power[3] ? "Yes ✅" : "No ❌";
+
+          // Notification status
+          document.getElementById('call1').innerHTML = data.calling[0];
+          document.getElementById('call2').innerHTML = data.calling[1];
+          document.getElementById('call3').innerHTML = data.calling[2];
+          document.getElementById('call4').innerHTML = data.calling[3];
+
+          // Energy values
+          document.getElementById('energy1').innerHTML = data.energy[0];
+          document.getElementById('energy2').innerHTML = data.energy[1];
+          document.getElementById('energy3').innerHTML = data.energy[2];
+          document.getElementById('energy4').innerHTML = data.energy[3];
+
+          // Optional: Add job status if available in your data
+          if (data.jobStatus) {
+            document.getElementById('job1').innerHTML = data.jobStatus[0];
+            document.getElementById('job2').innerHTML = data.jobStatus[1];
+            document.getElementById('job3').innerHTML = data.jobStatus[2];
+            document.getElementById('job4').innerHTML = data.jobStatus[3];
+          }
+        })
+        .catch(err => console.error("Error fetching data:", err));
+    }
+
+    setInterval(updateTable, 2000);
+    updateTable();
+  </script>
+</body>
+</html>
