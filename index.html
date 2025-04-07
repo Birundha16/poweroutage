@@ -93,7 +93,7 @@
  <script>
 async function fetchESP32Data() {
   try {
-    const response = await fetch("http://192.168.178.139/status");  // Change to your ESP32 IP
+    const response = await fetch("http://192.168.178.139/data");  // Change to your ESP32 IP
     const data = await response.json();
 
     for (let i = 0; i < 4; i++) {
